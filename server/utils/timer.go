@@ -1,10 +1,10 @@
 package utils
 
 import (
-	"time"
-	"strconv"
 	"fmt"
 	"log"
+	"strconv"
+	"time"
 )
 
 func TimeIntervalFileName(interval int) string {
@@ -35,13 +35,4 @@ func TimeIntervalFileName(interval int) string {
 	}
 	suffix := fmt.Sprintf("%02d", day/interval*interval)
 	return time.Unix(t, 0).Format("200601") + suffix + "0000"
-}
-
-func GetTimeInterval(interval int) int {
-	if interval < 60 {
-		return interval
-	} else if interval < 1440 {
-		return interval / 60 * 60
-	}
-	return interval / 1440 * 1440
 }

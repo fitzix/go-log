@@ -12,51 +12,48 @@ import (
 	"github.com/apex/log"
 	"github.com/fatih/color"
 	"github.com/fitzix/go-udp/server/models"
-	"github.com/fitzix/go-udp/server/utils"
+	"github.com/fitzix/go-udp/server/sender"
 )
 
 var (
 	ServerConf models.UdpConf
+	master     sender.Master
 )
 
 type Reader struct {
-	conn  *net.UDPConn        //UDP连接
-	logs  chan string         //日志消息
-	files map[string]*os.File //用于保存当前已打开的日志文件 file descriptor
+	conn *net.UDPConn //UDP连接
+	logs chan string  //日志消息
+	//files map[string]*os.File //用于保存当前已打开的日志文件 file descriptor
+	file *os.File
 }
 
-func (reader *Reader) WriteLog(log, filePath string) error {
-	if !strings.HasSuffix(filePath, "/") {
-		filePath += "/"
-	}
-	filename := filePath + utils.TimeIntervalFileName(ServerConf.Reader.Interval) + ".log"
-	reader.WriteContent(filename, log)
+func (reader *Reader) WriteLog(log string) error {
+	reader.WriteContent(log)
 	return nil
 }
 
 // 向文件内写数据
-func (reader *Reader) WriteContent(filename, content string) {
-	if _, ok := reader.files[filename]; !ok {
+func (reader *Reader) WriteContent(content string) {
+	if reader.file == nil{
 		err := errors.New("")
-		reader.files[filename], err = os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
-		if err != nil {
-			fmt.Println(err)
+		reader.file,err = os.OpenFile(ServerConf.LogDir + strconv.Itoa(int(time.Now().Unix())) + ".log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
+		if err != nil{
+			log.WithError(err).Error(color.RedString("创建日志文件失败"))
 		}
-		//关闭文件，删除file descriptor
 		go func() {
 			select {
 			case <-time.After(time.Duration(ServerConf.Reader.Interval) * time.Minute):
-				reader.files[filename].Close()
-				delete(reader.files, filename)
+				reader.file.Close()
+				reader.file = nil
 			}
 		}()
 	}
-	file := reader.files[filename]
-	if ServerConf.Reader.AutoNewline{
-		 file.WriteString(content + "\n")
-		 return
+
+	if ServerConf.Reader.AutoNewline {
+		reader.file.WriteString(content + "\n")
+		return
 	}
-	file.WriteString(content)
+	reader.file.WriteString(content)
 }
 
 // 读取日志并放入channel
@@ -74,10 +71,18 @@ func (reader *Reader) ReadLog() {
 }
 
 // 收取日志
-func (reader *Reader) HandleLog(filePath string) {
-	for {
-		rec := <-reader.logs
-		reader.WriteLog(rec, filePath)
+func (reader *Reader) HandleLog() {
+	if ServerConf.Sender.Enabled {
+		for {
+			rec := <-reader.logs
+			master.Request <- rec
+			reader.WriteLog(rec)
+		}
+	} else {
+		for {
+			rec := <-reader.logs
+			reader.WriteLog(rec)
+		}
 	}
 }
 
@@ -85,7 +90,8 @@ func Start() {
 	var s Reader
 	s.logs = make(chan string, ServerConf.Reader.ReadChan)
 
-	s.files = make(map[string]*os.File, 5)
+	//s.files = make(map[string]*os.File, 1)
+	s.file = nil
 	udpAddr, err := net.ResolveUDPAddr("udp4", ":"+strconv.Itoa(ServerConf.Port))
 	s.conn, err = net.ListenUDP("udp4", udpAddr)
 	if err != nil {
@@ -96,11 +102,20 @@ func Start() {
 	} else {
 		s.conn.SetReadBuffer(ServerConf.Reader.ReadBuffer)
 	}
+	if !strings.HasSuffix(ServerConf.LogDir, "/") {
+		ServerConf.LogDir += "/"
+	}
+
 	log.Infof(color.CyanString("开始监听%s", s.conn.LocalAddr()))
 
 	defer s.conn.Close()
 
-	go s.HandleLog(ServerConf.LogDir)
+	if ServerConf.Sender.Enabled {
+		master = sender.NewMaster(ServerConf.Sender)
+		go master.HandleSenderLog()
+	}
+
+	go s.HandleLog()
 
 	for {
 		s.ReadLog()
