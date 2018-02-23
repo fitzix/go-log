@@ -1,0 +1,6 @@
+package: github.com/fitzix/tool/udp
+import:
+- package: github.com/BurntSushi/toml
+  version: ^0.3.0
+- package: github.com/smallnest/weighted
+- package: github.com/myzhan/avroipc

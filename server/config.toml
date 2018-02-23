@@ -1,0 +1,41 @@
+title = "udp server 配置文件"
+# 监听端口
+port = 8888
+# 日志存储地址
+log_dir = ""
+
+
+[reader]
+#时间间隔重新生成文件 单位:分 60min
+interval = 60
+# 读取缓冲区 byte
+read_buffer = 1048576
+# channel 容量
+read_chan = 10000
+
+[sender]
+# 是否启用sender 默认不启用
+enabled = true
+[[sender.remote_server]]
+protocol = "tcp"
+ip = "10.211.55.18"
+port = 8888
+# 权重
+weight = 1
+pool_enabled = true
+[sender.remote_server.conn_pool]
+initial_cap = 30
+max_cap = 50
+idle_timeout = 10
+
+[[sender.remote_server]]
+protocol = "udp"
+ip = "10.211.55.18"
+port = 8888
+# 权重
+weight = 1
+pool_enabled = true
+[sender.remote_server.conn_pool]
+initial_cap = 30
+max_cap = 60
+idle_timeout = 10

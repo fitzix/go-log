@@ -1,0 +1,14 @@
+hash: 0ce3059a621a09b18bdcbd8753941c34cfc68cd91796bfebce1bd388cc4682f5
+updated: 2018-02-08T12:41:33.247721+08:00
+imports:
+- name: github.com/BurntSushi/toml
+  version: b26d9c308763d68093482582cea63d69be07a0f0
+- name: github.com/golang/snappy
+  version: 553a641470496b2327abcac10b36396bd98e45c9
+- name: github.com/linkedin/goavro
+  version: c57c0f2fdb8d0058584e6a59e895bd3c35233eb3
+- name: github.com/myzhan/avroipc
+  version: 2a6e5774f64d5a0c34764a0b978b8e478bf0ffdc
+- name: github.com/smallnest/weighted
+  version: 3a1cb727ddef772b9554b2ea0999659c140687f6
+testImports: []
