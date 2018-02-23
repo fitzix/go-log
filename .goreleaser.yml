@@ -1,9 +1,9 @@
 project_name: go-udp
-release:
-  github:
-    owner: fitzix
-    name: go-udp
-  name_template: '{{.Tag}}'
+#release:
+#  github:
+#    owner: fitzix
+#    name: go-udp
+#  name_template: '{{.Tag}}'
 #brew:
 #  commit_author:
 #    name: goreleaserbot
