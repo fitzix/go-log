@@ -9,9 +9,10 @@ type UdpConf struct {
 }
 
 type ReaderConf struct {
-	Interval   int `toml:"interval"`
-	ReadBuffer int `toml:"read_buffer"`
-	ReadChan   int `toml:"read_chan"`
+	Interval    int  `toml:"interval"`
+	ReadBuffer  int  `toml:"read_buffer"`
+	ReadChan    int  `toml:"read_chan"`
+	AutoNewline bool `toml:"auto_newline"`
 }
 
 type SenderConf struct {
@@ -50,6 +51,8 @@ interval = 60
 read_buffer = 1048576
 # channel 容量(理论上channel容量越大  缓冲性能越好但会消耗更多的内存)
 read_chan = 10000
+# 每行结尾是否追加换行符
+auto_newline = false
 
 #发送服务器配置
 [sender]

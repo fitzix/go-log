@@ -45,14 +45,17 @@ func (reader *Reader) WriteContent(filename, content string) {
 		//关闭文件，删除file descriptor
 		go func() {
 			select {
-			case <-time.After(time.Duration(ServerConf.Reader.Interval) * 60 * time.Second):
+			case <-time.After(time.Duration(ServerConf.Reader.Interval) * time.Minute):
 				reader.files[filename].Close()
 				delete(reader.files, filename)
 			}
 		}()
 	}
 	file := reader.files[filename]
-	// file.WriteString(content + "\n")
+	if ServerConf.Reader.AutoNewline{
+		 file.WriteString(content + "\n")
+		 return
+	}
 	file.WriteString(content)
 }
 
