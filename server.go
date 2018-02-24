@@ -10,7 +10,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/fitzix/go-udp/server/models"
 	"github.com/fitzix/go-udp/server/reader"
-	"gopkg.in/urfave/cli.v2"
+	"github.com/urfave/cli"
 )
 
 var (
@@ -19,7 +19,7 @@ var (
 	DATE      = "UNKNOWN"
 	GOVERSION = "UNKNOWN"
 
-	bold       = color.New(color.Bold)
+	bold = color.New(color.Bold)
 )
 
 func init() {
@@ -61,9 +61,9 @@ func main() {
 
 	App.Commands = []cli.Command{
 		{
-			Name: "init",
+			Name:    "init",
 			Aliases: []string{"i"},
-			Usage: "generate config.toml",
+			Usage:   "generate config.toml",
 			Action: func(c *cli.Context) error {
 				file, err := os.OpenFile(configPath, os.O_RDWR|os.O_CREATE, 0644)
 				if err != nil {
@@ -71,7 +71,7 @@ func main() {
 					return cli.NewExitError("\n", 1)
 				}
 				defer file.Close()
-				if _,err = file.WriteString(models.DefaultServerConf);err != nil{
+				if _, err = file.WriteString(models.DefaultServerConf); err != nil {
 					log.WithError(err).Error("写入配置文件失败")
 					return cli.NewExitError("\n", 1)
 				}
@@ -80,7 +80,6 @@ func main() {
 			},
 		},
 	}
-
 
 	if err := App.Run(os.Args); err != nil {
 		log.WithError(err).Fatal("failed")
