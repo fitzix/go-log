@@ -91,11 +91,13 @@ func Start() {
 	s.logs = make(chan string, ServerConf.Reader.ReadChan)
 
 	//s.files = make(map[string]*os.File, 1)
-	s.file = nil
 	udpAddr, err := net.ResolveUDPAddr("udp4", ":"+strconv.Itoa(ServerConf.Port))
+	if err != nil{
+		log.Fatalf("解析监听地址失败----> %v",err)
+	}
 	s.conn, err = net.ListenUDP("udp4", udpAddr)
 	if err != nil {
-		log.Fatalf("监听端口失败----->", err)
+		log.Fatalf("监听端口失败----->%v", err)
 	}
 	if ServerConf.Reader.ReadBuffer == 0 {
 		s.conn.SetReadBuffer(1048576)
