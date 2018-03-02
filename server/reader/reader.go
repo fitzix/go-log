@@ -39,6 +39,7 @@ func (reader *Reader) WriteContent(content string) {
 		reader.file,err = os.OpenFile(ServerConf.LogDir + strconv.Itoa(int(time.Now().Unix())) + ".log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 		if err != nil{
 			log.WithError(err).Error(color.RedString("创建日志文件失败"))
+			return
 		}
 		go func() {
 			select {
