@@ -59,7 +59,7 @@ func (reader *Reader) WriteContent(content string) {
 
 // 读取日志并放入channel
 func (reader *Reader) ReadLog() {
-	buf := make([]byte, 1024)
+	buf := make([]byte, ServerConf.Reader.ReadeByte)
 	n, _, err := reader.conn.ReadFromUDP(buf)
 	if err != nil {
 		fmt.Println(err.Error())

@@ -11,6 +11,7 @@ type UdpConf struct {
 type ReaderConf struct {
 	Interval    int  `toml:"interval"`
 	ReadBuffer  int  `toml:"read_buffer"`
+	ReadeByte   int  `json:"reade_byte"`
 	ReadChan    int  `toml:"read_chan"`
 	AutoNewline bool `toml:"auto_newline"`
 }
@@ -53,6 +54,8 @@ read_buffer = 1048576
 read_chan = 10000
 # 每行结尾是否追加换行符
 auto_newline = false
+# 一次读取长度
+read_byte = 1024
 
 #发送服务器配置
 [sender]
