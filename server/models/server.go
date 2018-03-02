@@ -11,7 +11,7 @@ type UdpConf struct {
 type ReaderConf struct {
 	Interval    int  `toml:"interval"`
 	ReadBuffer  int  `toml:"read_buffer"`
-	ReadeByte   int  `json:"reade_byte"`
+	ReadByte   int  `toml:"read_byte"`
 	ReadChan    int  `toml:"read_chan"`
 	AutoNewline bool `toml:"auto_newline"`
 }
