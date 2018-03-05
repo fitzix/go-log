@@ -13,7 +13,7 @@ type ReaderConf struct {
 	ReadBuffer  int  `toml:"read_buffer"`
 	ReadByte   int  `toml:"read_byte"`
 	ReadChan    int  `toml:"read_chan"`
-	AutoNewline bool `toml:"auto_newline"`
+	//AutoNewline bool `toml:"auto_newline"`
 }
 
 type SenderConf struct {
@@ -52,8 +52,6 @@ interval = 60
 read_buffer = 1048576
 # channel 容量(理论上channel容量越大  缓冲性能越好但会消耗更多的内存)
 read_chan = 10000
-# 每行结尾是否追加换行符
-auto_newline = false
 # 一次读取长度
 read_byte = 1024
 

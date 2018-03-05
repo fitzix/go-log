@@ -50,10 +50,15 @@ func (reader *Reader) WriteContent(content string) {
 		}()
 	}
 
-	if ServerConf.Reader.AutoNewline {
+	//if ServerConf.Reader.AutoNewline {
+	//	reader.file.WriteString(content + "\n")
+	//	return
+	//}
+	if !strings.HasSuffix(content,"\n") {
 		reader.file.WriteString(content + "\n")
 		return
 	}
+
 	reader.file.WriteString(content)
 }
 
