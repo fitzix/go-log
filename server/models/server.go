@@ -1,18 +1,19 @@
 package models
 
-type UdpConf struct {
+type SerConf struct {
 	Title  string     `toml:"title"`
-	Port   int        `toml:"port"`
 	LogDir string     `toml:"log_dir"`
 	Reader ReaderConf `toml:"reader"`
 	Sender SenderConf `toml:"sender"`
 }
 
 type ReaderConf struct {
-	Interval    int  `toml:"interval"`
-	ReadBuffer  int  `toml:"read_buffer"`
-	ReadByte   int  `toml:"read_byte"`
-	ReadChan    int  `toml:"read_chan"`
+	Network    string `json:"network"`
+	Port       int    `toml:"port"`
+	Interval   int    `toml:"interval"`
+	ReadBuffer int    `toml:"read_buffer"`
+	ReadByte   int    `toml:"read_byte"`
+	ReadChan   int    `toml:"read_chan"`
 	//AutoNewline bool `toml:"auto_newline"`
 }
 
@@ -40,12 +41,14 @@ type ConnPool struct {
 // 配置文件默认值
 var DefaultServerConf = `
 title = "udp server 配置文件"
-# 监听端口
-port = 8888
 # 日志存储地址
 log_dir = "/tmp"
 
 [reader]
+# 监听类型 tcp4 tcp6 udp4 udp6
+network = "udp4"
+# 监听端口
+port = 8888
 #时间间隔重新生成文件 单位:分 60min
 interval = 60
 # 读取缓冲区大小 byte
@@ -54,36 +57,41 @@ read_buffer = 1048576
 read_chan = 10000
 # 一次读取长度
 read_byte = 1024
-
-#发送服务器配置
-[sender]
-# 是否启用sender 默认不启用
-enabled = false
-
-# channel缓存 
-channel_size = 50000
-
-[[sender.remote_server]]
-protocol = "tcp"
-ip = "127.0.0.1"
-port = 8080
-# 是否启用连接池
-pool_enabled = true
-# ;连接池配置
-[sender.remote_server.conn_pool]
-# 初始化连接数
-initial_cap = 30
-# 最大连接数
-max_cap = 50
-# 连接失效时间
-idle_timeout = 10
-
-
-[[sender.remote_server]]
-protocol = "udp"
-ip = "127.0.0.1"
-port = 8080
 `
+
+
+//#发送服务器配置
+//[sender]
+//# 是否启用sender 默认不启用
+//enabled = false
+//
+//# channel缓存
+//channel_size = 50000
+//
+//[[sender.remote_server]]
+//protocol = "tcp"
+//ip = "127.0.0.1"
+//port = 8080
+//# 是否启用连接池
+//pool_enabled = true
+//# ;连接池配置
+//[sender.remote_server.conn_pool]
+//# 初始化连接数
+//initial_cap = 30
+//# 最大连接数
+//max_cap = 50
+//# 连接失效时间
+//idle_timeout = 10
+//
+//
+//[[sender.remote_server]]
+//protocol = "udp"
+//ip = "127.0.0.1"
+//port = 8080
+
+var (
+	ServerConf SerConf
+)
 
 //var ServerConf = UdpConf{
 //	Title:  "配置",

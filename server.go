@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/BurntSushi/toml"
 	"github.com/apex/log"
@@ -50,12 +51,17 @@ func main() {
 			return cli.NewExitError("", 1)
 		}
 		log.Infof(bold.Sprint("开始解析配置文件"))
-		ServerConf := &reader.ServerConf
+		ServerConf := &models.ServerConf
 		if _, err := toml.DecodeFile(configPath, ServerConf); err != nil {
 			log.WithError(err).Error(color.RedString("解析配置文件失败,请检查配置文件格式"))
 			return cli.NewExitError("", 1)
 		}
-		reader.Start()
+
+		if strings.HasPrefix(ServerConf.Reader.Network,"tcp") {
+			reader.TcpStart()
+			return nil
+		}
+		reader.UdpStart()
 		return nil
 	}
 
