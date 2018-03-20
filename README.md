@@ -1,2 +1,2 @@
-# go-udp
-go udp log collection server 
+# go-log
+go udp/tcp log collection server
