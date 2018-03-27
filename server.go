@@ -84,7 +84,7 @@ func main() {
 		if strings.HasPrefix(ServerConf.Reader.Network, "tcp") {
 			reader.TcpStart()
 		} else {
-			reader.UdpStart()
+			reader.UDPStart()
 		}
 		return nil
 	}

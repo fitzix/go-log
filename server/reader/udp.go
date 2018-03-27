@@ -10,13 +10,14 @@ import (
 	"github.com/fatih/color"
 )
 
-type UdpReader struct {
+// UDPReader udp struct
+type UDPReader struct {
 	conn *net.UDPConn // UDP连接
 	Reader
 }
 
-// 读取日志并放入channel
-func (r *UdpReader) ReadLog() {
+// ReadLog 读取日志并放入channel
+func (r *UDPReader) ReadLog() {
 	buf := make([]byte, ServerConf.Reader.ReadByte)
 	n, _, err := r.conn.ReadFromUDP(buf)
 	if err != nil {
@@ -29,8 +30,9 @@ func (r *UdpReader) ReadLog() {
 	}
 }
 
-func UdpStart() {
-	var s UdpReader
+// UDPStart udp server start
+func UDPStart() {
+	var s UDPReader
 	s.logs = make(chan string, ServerConf.Reader.ReadChan)
 
 	// s.files = make(map[string]*os.File, 1)
