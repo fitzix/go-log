@@ -2,11 +2,11 @@ package sender
 
 import (
 	"net"
-	"github.com/fitzix/go-udp/server/models"
+	"github.com/fitzix/go-log/server/models"
 	"strconv"
 	"log"
-	"github.com/fitzix/go-udp/server/utils"
-	"github.com/fitzix/go-udp/server/utils/pool"
+	"github.com/fitzix/go-log/server/utils"
+	"github.com/fitzix/go-log/server/utils/pool"
 	"time"
 )
 

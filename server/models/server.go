@@ -14,7 +14,6 @@ type ReaderConf struct {
 	ReadBuffer int    `toml:"read_buffer"`
 	ReadByte   int    `toml:"read_byte"`
 	ReadChan   int    `toml:"read_chan"`
-	//AutoNewline bool `toml:"auto_newline"`
 }
 
 type SenderConf struct {
@@ -88,10 +87,6 @@ read_byte = 1024
 //protocol = "udp"
 //ip = "127.0.0.1"
 //port = 8080
-
-var (
-	ServerConf SerConf
-)
 
 //var ServerConf = UdpConf{
 //	Title:  "配置",
