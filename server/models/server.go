@@ -50,7 +50,7 @@ network = "udp4"
 port = 8888
 #时间间隔重新生成文件 单位:分 60min
 interval = 60
-# 读取缓冲区大小 byte
+# (udp有效)读取缓冲区大小 byte
 read_buffer = 1048576
 # channel 容量(理论上channel容量越大  缓冲性能越好但会消耗更多的内存)
 read_chan = 10000
