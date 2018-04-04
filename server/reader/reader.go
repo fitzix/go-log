@@ -27,7 +27,7 @@ type Reader struct {
 func (reader *Reader) HandleLog() {
 	for {
 		rec := <-reader.logs
-		if utf8.ValidString(rec) {
+		if !utf8.ValidString(rec) {
 			log.Errorf("编码错误: %v", rec)
 		} else {
 			reader.WriteContent(rec)
