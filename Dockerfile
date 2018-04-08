@@ -1,7 +1,7 @@
 FROM golang:latest AS builder
 
 ENV CGO_ENABLED=0
-ENV GOPROXY=https://goproxy.io
+ENV GOPROXY=https://athens.azurefd.net
 
 WORKDIR /github.com/fitzix/go-log
 
