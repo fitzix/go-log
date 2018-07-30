@@ -83,8 +83,10 @@ func main() {
 
 		if strings.HasPrefix(ServerConf.Reader.Network, "tcp") {
 			reader.TcpStart()
-		} else {
+		} else if strings.HasPrefix(ServerConf.Reader.Network, "udp") {
 			reader.UDPStart()
+		} else {
+			reader.HttpStart()
 		}
 		return nil
 	}

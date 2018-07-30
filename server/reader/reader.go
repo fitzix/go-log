@@ -23,6 +23,12 @@ type Reader struct {
 	file *os.File
 }
 
+type XReader interface {
+	HandleLog()
+	WriteContent(content string)
+	Start()
+}
+
 // 收取日志
 func (reader *Reader) HandleLog() {
 	for {

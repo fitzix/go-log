@@ -35,7 +35,6 @@ func UDPStart() {
 	var s UDPReader
 	s.logs = make(chan string, ServerConf.Reader.ReadChan)
 
-	// s.files = make(map[string]*os.File, 1)
 	udpAddr, err := net.ResolveUDPAddr(ServerConf.Reader.Network, ":"+strconv.Itoa(ServerConf.Reader.Port))
 	if err != nil {
 		log.Fatalf("解析监听地址失败----> %v", err)

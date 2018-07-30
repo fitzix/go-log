@@ -44,7 +44,7 @@ title = "udp server 配置文件"
 log_dir = "/tmp"
 
 [reader]
-# 监听类型 tcp4 tcp6 udp4 udp6
+# 监听类型 http tcp4 tcp6 udp4 udp6
 network = "udp4"
 # 监听端口
 port = 8888
@@ -54,7 +54,7 @@ interval = 60
 read_buffer = 1048576
 # channel 容量(理论上channel容量越大  缓冲性能越好但会消耗更多的内存)
 read_chan = 10000
-# 一次读取长度
+# 一次读取长度(http 无效)
 read_byte = 1024
 `
 

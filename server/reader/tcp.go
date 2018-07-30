@@ -14,11 +14,6 @@ type TcpReader struct {
 	Reader
 }
 
-func (r *TcpReader) WriteLog(log string) error {
-	r.WriteContent(log)
-	return nil
-}
-
 // 读取日志并放入channel
 func (r *TcpReader) ReadLog(c net.Conn) {
 	defer c.Close()
@@ -36,7 +31,6 @@ func TcpStart() {
 	var s TcpReader
 	s.logs = make(chan string, ServerConf.Reader.ReadChan)
 
-	//s.files = make(map[string]*os.File, 1)
 	tcpAddr, err := net.ResolveTCPAddr(ServerConf.Reader.Network, ":"+strconv.Itoa(ServerConf.Reader.Port))
 	if err != nil {
 		log.Fatalf("解析监听地址失败----> %v", err)
@@ -64,5 +58,4 @@ func TcpStart() {
 		}
 		go s.ReadLog(c)
 	}
-
 }
