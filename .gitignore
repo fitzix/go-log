@@ -14,5 +14,4 @@
 .glide/
 vendor
 dist
-.goreleaser.yml
 .idea
