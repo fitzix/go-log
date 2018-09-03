@@ -19,7 +19,6 @@ var ServerConf models.SerConf
 // Reader reader
 type Reader struct {
 	logs chan string //日志消息
-	//files map[string]*os.File //用于保存当前已打开的日志文件 file descriptor
 	file *os.File
 }
 
@@ -64,4 +63,19 @@ func (reader *Reader) WriteContent(content string) {
 		return
 	}
 	reader.file.WriteString(content)
+}
+
+func Start() {
+	var readerImpl = getReader()
+	readerImpl.Start()
+}
+
+func getReader() XReader {
+	if strings.HasPrefix(ServerConf.Reader.Network, "tcp") {
+		return &TcpReader{}
+	}
+	if strings.HasPrefix(ServerConf.Reader.Network, "udp") {
+		return &UDPReader{}
+	}
+	return &HttpReader{}
 }

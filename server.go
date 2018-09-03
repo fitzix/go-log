@@ -2,9 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strings"
-
 	"github.com/BurntSushi/toml"
 	"github.com/apex/log"
 	lcli "github.com/apex/log/handlers/cli"
@@ -12,6 +9,7 @@ import (
 	"github.com/fitzix/go-log/server/models"
 	"github.com/fitzix/go-log/server/reader"
 	"github.com/urfave/cli"
+	"os"
 )
 
 var (
@@ -80,14 +78,7 @@ func main() {
 			log.WithError(err).Error(color.RedString("解析配置文件失败,请检查配置文件格式"))
 			return cli.NewExitError("", 1)
 		}
-
-		if strings.HasPrefix(ServerConf.Reader.Network, "tcp") {
-			reader.TcpStart()
-		} else if strings.HasPrefix(ServerConf.Reader.Network, "udp") {
-			reader.UDPStart()
-		} else {
-			reader.HttpStart()
-		}
+		reader.Start()
 		return nil
 	}
 

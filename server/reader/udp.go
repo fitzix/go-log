@@ -20,6 +20,8 @@ type UDPReader struct {
 func (r *UDPReader) ReadLog() {
 	buf := make([]byte, ServerConf.Reader.ReadByte)
 	n, _, err := r.conn.ReadFromUDP(buf)
+	print(2333322323)
+
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -31,34 +33,33 @@ func (r *UDPReader) ReadLog() {
 }
 
 // UDPStart udp server start
-func UDPStart() {
-	var s UDPReader
-	s.logs = make(chan string, ServerConf.Reader.ReadChan)
+func (r * UDPReader) Start() {
+	r.logs = make(chan string, ServerConf.Reader.ReadChan)
 
 	udpAddr, err := net.ResolveUDPAddr(ServerConf.Reader.Network, ":"+strconv.Itoa(ServerConf.Reader.Port))
 	if err != nil {
 		log.Fatalf("解析监听地址失败----> %v", err)
 	}
-	s.conn, err = net.ListenUDP("udp4", udpAddr)
+	r.conn, err = net.ListenUDP("udp4", udpAddr)
 	if err != nil {
 		log.Fatalf("监听端口失败----->%v", err)
 	}
 	if ServerConf.Reader.ReadBuffer == 0 {
-		s.conn.SetReadBuffer(1048576)
+		r.conn.SetReadBuffer(1048576)
 	} else {
-		s.conn.SetReadBuffer(ServerConf.Reader.ReadBuffer)
+		r.conn.SetReadBuffer(ServerConf.Reader.ReadBuffer)
 	}
 	if !strings.HasSuffix(ServerConf.LogDir, "/") {
 		ServerConf.LogDir += "/"
 	}
 
-	log.Infof(color.CyanString("开始监听%s", s.conn.LocalAddr()))
+	log.Infof(color.CyanString("开始监听%s", r.conn.LocalAddr()))
 
-	defer s.conn.Close()
+	defer r.conn.Close()
 
-	go s.HandleLog()
+	go r.HandleLog()
 
 	for {
-		s.ReadLog()
+		r.ReadLog()
 	}
 }

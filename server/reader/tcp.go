@@ -10,7 +10,7 @@ import (
 )
 
 type TcpReader struct {
-	listener *net.TCPListener //UDP连接
+	listener *net.TCPListener //TCP连接
 	Reader
 }
 
@@ -27,15 +27,14 @@ func (r *TcpReader) ReadLog(c net.Conn) {
 	}
 }
 
-func TcpStart() {
-	var s TcpReader
-	s.logs = make(chan string, ServerConf.Reader.ReadChan)
+func (r *TcpReader) Start() {
+	r.logs = make(chan string, ServerConf.Reader.ReadChan)
 
 	tcpAddr, err := net.ResolveTCPAddr(ServerConf.Reader.Network, ":"+strconv.Itoa(ServerConf.Reader.Port))
 	if err != nil {
 		log.Fatalf("解析监听地址失败----> %v", err)
 	}
-	s.listener, err = net.ListenTCP(ServerConf.Reader.Network, tcpAddr)
+	r.listener, err = net.ListenTCP(ServerConf.Reader.Network, tcpAddr)
 	if err != nil {
 		log.Fatalf("监听端口失败----->%v", err)
 	}
@@ -44,18 +43,18 @@ func TcpStart() {
 		ServerConf.LogDir += "/"
 	}
 
-	log.Infof(color.CyanString("开始监听%s", s.listener.Addr()))
+	log.Infof(color.CyanString("开始监听%s", r.listener.Addr()))
 
-	defer s.listener.Close()
+	defer r.listener.Close()
 
-	go s.HandleLog()
+	go r.HandleLog()
 
 	for {
-		c, err := s.listener.Accept()
+		c, err := r.listener.Accept()
 		if err != nil {
 			log.WithError(err).Error(color.RedString("accept 接收失败"))
 			continue
 		}
-		go s.ReadLog(c)
+		go r.ReadLog(c)
 	}
 }
