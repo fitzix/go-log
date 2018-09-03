@@ -71,7 +71,7 @@ func main() {
 
 	App.Action = func(c *cli.Context) error {
 		if _, err := os.Stat(configPath); os.IsNotExist(err) {
-			log.WithError(err).Error(color.RedString("未找到配置文件,请先使用init方法生成配置文件"))
+			log.Error(color.RedString("未找到配置文件,请先使用init方法生成配置文件"))
 			return cli.NewExitError("", 1)
 		}
 		log.Infof(bold.Sprint("开始解析配置文件"))
