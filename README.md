@@ -36,6 +36,6 @@ read_byte = 1024
 # 运行程序
 >windows下请执行go-log.exe文件<br><br>
 linux/mac下直接执行脚本<br>
-./go-long
+./go-log
 
 
