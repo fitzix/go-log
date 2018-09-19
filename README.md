@@ -2,12 +2,15 @@
 go udp/tcp log collection server
 
 # windows版安装方法
->解压文件<br><br>
+>解压文件go_log_0.0.8_windows_amd64.zip<br><br>
 初始化程序，进行到解压文件目录，执行下面命令，进入到解压文件目录，执行下面命令，会在当前目录下生成一个config.toml文件<br>
 `go-log.exe init`
 # linux/mac版安装方法
 >解压文件<br>
+mac<br>
 `tar -xf go_log_0.0.8_darwin_amd64.tar.gz`<br><br>
+linux<br>
+`tar -xf go_log_0.0.8_linux_amd64.tar.gz`<br><br>
 初始化程序,进入到解压文件目录，执行下面命令，会在当前目录下生成一个config.toml文件<br>
 `./go-log init`
 # 修改配置文件
