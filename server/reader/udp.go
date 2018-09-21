@@ -20,8 +20,6 @@ type UDPReader struct {
 func (r *UDPReader) ReadLog() {
 	buf := make([]byte, ServerConf.Reader.ReadByte)
 	n, _, err := r.conn.ReadFromUDP(buf)
-	print(2333322323)
-
 	if err != nil {
 		fmt.Println(err.Error())
 		return

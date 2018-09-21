@@ -1,10 +1,11 @@
 package reader
 
 import (
+	"io/ioutil"
 	"net/http"
 	"strconv"
-	"io/ioutil"
 	"strings"
+
 	"github.com/apex/log"
 	"github.com/fatih/color"
 )

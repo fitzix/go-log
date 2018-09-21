@@ -58,10 +58,16 @@ func (reader *Reader) WriteContent(content string) {
 		}()
 	}
 
+	if ServerConf.LogType == "json" && strings.Contains(content, "\n") {
+		content = strings.Replace(content, "\n", "", -1)
+	}
+
 	if !strings.HasSuffix(content, "\n") {
 		reader.file.WriteString(content + "\n")
 		return
 	}
+
+
 	reader.file.WriteString(content)
 }
 

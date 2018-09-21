@@ -1,14 +1,15 @@
 package models
 
 type SerConf struct {
-	Title  string     `toml:"title"`
-	LogDir string     `toml:"log_dir"`
-	Reader ReaderConf `toml:"reader"`
-	Sender SenderConf `toml:"sender"`
+	Title   string     `toml:"title"`
+	LogDir  string     `toml:"log_dir"`
+	LogType string     `toml:"log_type"`
+	Reader  ReaderConf `toml:"reader"`
+	Sender  SenderConf `toml:"sender"`
 }
 
 type ReaderConf struct {
-	Network    string `json:"network"`
+	Network    string `toml:"network"`
 	Port       int    `toml:"port"`
 	Interval   int    `toml:"interval"`
 	ReadBuffer int    `toml:"read_buffer"`
@@ -42,6 +43,8 @@ var DefaultServerConf = `
 title = "udp server 配置文件"
 # 日志存储地址
 log_dir = "/tmp"
+# 日志类型 raw(默认) json(每次一条 校验并去掉换行符)
+log_type = "raw"
 
 [reader]
 # 监听类型 http tcp4 tcp6 udp4 udp6
@@ -57,7 +60,6 @@ read_chan = 10000
 # 一次读取长度(http 无效)
 read_byte = 1024
 `
-
 
 //#发送服务器配置
 //[sender]
