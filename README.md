@@ -9,13 +9,13 @@ go udp/tcp log collection server
 
 # linux/mac版安装方法
 
->解压文件
-mac
-`tar -xf go_log_0.0.8_darwin_amd64.tar.gz`
-linux
-`tar -xf go_log_0.0.8_linux_amd64.tar.gz`
-初始化程序,进入到解压文件目录，执行下面命令，会在当前目录下生成一个config.toml文件
-`./go-log init`
+> 解压文件
+> mac
+> `tar -xf go_log_0.0.8_darwin_amd64.tar.gz`
+> linux
+> `tar -xf go_log_0.0.8_linux_amd64.tar.gz`
+> 初始化程序,进入到解压文件目录，执行下面命令，会在当前目录下生成一个config.toml文件
+> `./go-log init`
 
 # 修改配置文件
 
