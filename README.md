@@ -41,7 +41,7 @@ read_chan = 10000
 # 一次读取长度(http 无效)
 read_byte = 1024
 ```
-主要配置log_dir与port,注意windows下请用\\,例如：log_dir = "D:\\logs"
+主要配置log_dir与port,注意windows下请用\\\\,例如：log_dir = "D:\\\\logs"
 其它参数请按需配置
 
 # 运行程序
