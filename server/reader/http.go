@@ -33,7 +33,7 @@ func (r *HttpReader) Start() {
 			result, _ := ioutil.ReadAll(req.Body)
 			r.logs <- string(result)
 		} else {
-			w.Write([]byte("请使用POST发送日志"))
+			w.Write([]byte("请使用POST发送日志!"))
 		}
 	})
 
