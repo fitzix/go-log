@@ -2,10 +2,10 @@ package pool
 
 import (
 	"errors"
+	"fmt"
+	"log"
 	"sync"
 	"time"
-	"log"
-	"fmt"
 )
 
 //PoolConfig 连接池相关配置
@@ -52,7 +52,7 @@ func NewChannelPool(poolConfig *PoolConfig) (Pool, error) {
 	for i := 0; i < poolConfig.InitialCap; i++ {
 		conn, err := c.factory()
 		if err != nil {
-			log.Println("初始化连接失败",err)
+			log.Println("初始化连接失败", err)
 			c.Release()
 			return nil, fmt.Errorf("factory is not able to fill the pool: %s", err)
 		}
@@ -81,6 +81,7 @@ func (c *channelPool) Get() (interface{}, error) {
 	for {
 		select {
 		case wrapConn := <-conns:
+			// 连接池关闭
 			if wrapConn == nil {
 				return nil, ErrClosed
 			}

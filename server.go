@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/BurntSushi/toml"
 	"github.com/apex/log"
 	lcli "github.com/apex/log/handlers/cli"
 	"github.com/fatih/color"
+	"github.com/urfave/cli"
+
 	"github.com/fitzix/go-log/server/models"
 	"github.com/fitzix/go-log/server/reader"
-	"github.com/urfave/cli"
-	"os"
 )
 
 var (
