@@ -18,7 +18,8 @@ var ServerConf models.SerConf
 
 // Reader reader
 type Reader struct {
-	logs chan string //日志消息
+	// 日志消息
+	logs chan string
 	file *os.File
 }
 
@@ -66,7 +67,6 @@ func (reader *Reader) WriteContent(content string) {
 		reader.file.WriteString(content + "\n")
 		return
 	}
-
 
 	reader.file.WriteString(content)
 }
