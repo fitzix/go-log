@@ -2,16 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/BurntSushi/toml"
-	"github.com/apex/log"
-	lcli "github.com/apex/log/handlers/cli"
-	"github.com/fatih/color"
+	"github.com/fitzix/go-log/models"
+	"github.com/fitzix/go-log/reader"
 	"github.com/urfave/cli"
-
-	"github.com/fitzix/go-log/server/models"
-	"github.com/fitzix/go-log/server/reader"
 )
 
 var (
@@ -19,13 +16,7 @@ var (
 	COMMIT    = "UNKNOWN"
 	DATE      = "UNKNOWN"
 	GOVERSION = "UNKNOWN"
-
-	bold = color.New(color.Bold)
 )
-
-func init() {
-	log.SetHandler(lcli.Default)
-}
 
 func main() {
 	var configPath string
@@ -55,15 +46,15 @@ func main() {
 			Action: func(c *cli.Context) error {
 				file, err := os.OpenFile(configPath, os.O_RDWR|os.O_CREATE, 0644)
 				if err != nil {
-					log.WithError(err).Error("创建配置文件失败")
+					log.Println("创建配置文件失败", err)
 					return cli.NewExitError("\n", 1)
 				}
 				defer file.Close()
 				if _, err = file.WriteString(models.DefaultServerConf); err != nil {
-					log.WithError(err).Error("写入配置文件失败")
+					log.Println("写入配置文件失败", err)
 					return cli.NewExitError("\n", 1)
 				}
-				log.Infof(bold.Sprint("配置文件生成成功"))
+				log.Println("配置文件生成成功")
 				return nil
 			},
 		},
@@ -71,20 +62,20 @@ func main() {
 
 	App.Action = func(c *cli.Context) error {
 		if _, err := os.Stat(configPath); os.IsNotExist(err) {
-			log.Error(color.RedString("未找到配置文件,请先使用init方法生成配置文件"))
+			log.Println("未找到配置文件,请先使用init方法生成配置文件")
 			return cli.NewExitError("", 1)
 		}
-		log.Infof(bold.Sprint("开始解析配置文件"))
-		ServerConf := &reader.ServerConf
+		log.Println("开始解析配置文件")
+		ServerConf := new(models.SenderConf)
 		if _, err := toml.DecodeFile(configPath, ServerConf); err != nil {
-			log.WithError(err).Error(color.RedString("解析配置文件失败,请检查配置文件格式"))
+			log.Println("解析配置文件失败,请检查配置文件格式")
 			return cli.NewExitError("", 1)
 		}
-		reader.Start()
-		return nil
+		return reader.Start()
+
 	}
 
 	if err := App.Run(os.Args); err != nil {
-		log.WithError(err).Fatal("failed")
+		log.Println("failed", err)
 	}
 }

@@ -24,5 +24,3 @@ archive:
   format_overrides:
     - goos: windows
       format: zip
-
-#  GOVERSION=`go version` goreleaser --rm-dist

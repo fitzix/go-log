@@ -1,13 +1,14 @@
 package sender
 
 import (
-	"net"
-	"github.com/fitzix/go-log/server/models"
-	"strconv"
 	"log"
-	"github.com/fitzix/go-log/server/utils"
-	"github.com/fitzix/go-log/server/utils/pool"
+	"net"
+	"strconv"
 	"time"
+
+	"github.com/fitzix/go-log/models"
+	"github.com/fitzix/go-log/utils"
+	"github.com/fitzix/go-log/utils/pool"
 )
 
 type Request struct {
@@ -28,9 +29,9 @@ type Master struct {
 }
 
 func NewMaster(serverConf models.SenderConf) (master Master) {
-	if serverConf.ChannelSize == 0{
+	if serverConf.ChannelSize == 0 {
 		master.Request = make(chan string, 10000)
-	}else {
+	} else {
 		master.Request = make(chan string, serverConf.ChannelSize)
 	}
 	for _, value := range serverConf.RemoteServer {
@@ -62,7 +63,7 @@ func createPool(remote models.RemoteServerConf) (p pool.Pool, err error) {
 		MaxCap:     remote.ConnPool.MaxCap,
 		Factory:    factory,
 		Close:      closePool,
-		//链接最大空闲时间，超过该时间的链接 将会关闭，可避免空闲时链接EOF，自动失效的问题
+		// 链接最大空闲时间，超过该时间的链接 将会关闭，可避免空闲时链接EOF，自动失效的问题
 		IdleTimeout: time.Duration(remote.ConnPool.IdleTimeout) * time.Second,
 	}
 	p, err = pool.NewChannelPool(poolConfig)
@@ -85,17 +86,17 @@ func (w *Worker) handleLog() {
 	for {
 		conn, err := w.pool.Get()
 		if err != nil {
-			log.Println("sender:88 获取连接池连接失败",err)
+			log.Println("sender:88 获取连接池连接失败", err)
 			continue
 		}
 		_, err = conn.(net.Conn).Write([]byte(<-w.msg))
 		if err != nil {
-			log.Println("sender:93 socker写入数据失败",err)
+			log.Println("sender:93 socker写入数据失败", err)
 		}
 	}
 }
 
-func (m *Master)Release() {
+func (m *Master) Release() {
 	for _, value := range m.Workers {
 		value.pool.Release()
 	}

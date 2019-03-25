@@ -1,6 +1,6 @@
 package models
 
-type SerConf struct {
+type ServerConf struct {
 	Title   string     `toml:"title"`
 	LogDir  string     `toml:"log_dir"`
 	LogType string     `toml:"log_type"`
@@ -60,56 +60,3 @@ read_chan = 10000
 # 一次读取长度(http 无效)
 read_byte = 1024
 `
-
-//#发送服务器配置
-//[sender]
-//# 是否启用sender 默认不启用
-//enabled = false
-//
-//# channel缓存
-//channel_size = 50000
-//
-//[[sender.remote_server]]
-//protocol = "tcp"
-//ip = "127.0.0.1"
-//port = 8080
-//# 是否启用连接池
-//pool_enabled = true
-//# ;连接池配置
-//[sender.remote_server.conn_pool]
-//# 初始化连接数
-//initial_cap = 30
-//# 最大连接数
-//max_cap = 50
-//# 连接失效时间
-//idle_timeout = 10
-//
-//
-//[[sender.remote_server]]
-//protocol = "udp"
-//ip = "127.0.0.1"
-//port = 8080
-
-//var ServerConf = UdpConf{
-//	Title:  "配置",
-//	Port:   8888,
-//	LogDir: "",
-//	Reader: ReaderConf{
-//		Interval:   60,
-//		ReadBuffer: 1024 * 1024,
-//	},
-//	Sender: SenderConf{
-//		RemoteServer: []RemoteServerConf{
-//			{
-//				Port:     9000,
-//				Protocol: "udp",
-//				Ip:       "127.0.0.1",
-//			},
-//			{
-//				Port:     9001,
-//				Protocol: "tcp",
-//				Ip:       "127.0.0.1",
-//			},
-//		},
-//	},
-//}

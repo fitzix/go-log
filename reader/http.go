@@ -2,19 +2,17 @@ package reader
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/apex/log"
-	"github.com/fatih/color"
 )
 
 type HttpReader struct {
 	Reader
 }
 
-func (r *HttpReader) Start() {
+func (r *HttpReader) Start() error {
 	r.logs = make(chan string, ServerConf.Reader.ReadChan)
 
 	if !strings.HasSuffix(ServerConf.LogDir, "/") {
@@ -23,7 +21,7 @@ func (r *HttpReader) Start() {
 
 	go r.HandleLog()
 
-	log.Infof(color.CyanString("开始监听%d", ServerConf.Reader.Port))
+	log.Printf("开始监听%d", ServerConf.Reader.Port)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -33,11 +31,15 @@ func (r *HttpReader) Start() {
 			result, _ := ioutil.ReadAll(req.Body)
 			r.logs <- string(result)
 		} else {
-			w.Write([]byte("请使用POST发送日志!"))
+			_, err := w.Write([]byte("请使用POST发送日志!"))
+			if err != nil {
+				log.Println("write response error", err)
+			}
 		}
 	})
 
 	if err := http.ListenAndServe(":"+strconv.Itoa(ServerConf.Reader.Port), nil); err != nil {
 		log.Fatalf("监听端口失败----->%v", err)
 	}
+	return nil
 }

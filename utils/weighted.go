@@ -47,7 +47,7 @@ func (w *W1) RemoveAll() {
 	w.n = 0
 }
 
-//Reset resets all current weights.
+// Reset resets all current weights.
 func (w *W1) Reset() {
 	for _, s := range w.servers {
 		s.EffectiveWeight = s.Weight
@@ -79,7 +79,7 @@ func (w *W1) NextWeighted() *Weighted1 {
 	return nextWeighted1(w.servers)
 }
 
-//https://github.com/phusion/nginx/commit/27e94984486058d73157038f7950a0a36ecc6e35
+// https://github.com/phusion/nginx/commit/27e94984486058d73157038f7950a0a36ecc6e35
 func nextWeighted1(servers []*Weighted1) (best *Weighted1) {
 	total := 0
 

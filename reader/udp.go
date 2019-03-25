@@ -2,12 +2,10 @@ package reader
 
 import (
 	"fmt"
+	"log"
 	"net"
 	"strconv"
 	"strings"
-
-	"github.com/apex/log"
-	"github.com/fatih/color"
 )
 
 // UDPReader udp struct
@@ -31,29 +29,39 @@ func (r *UDPReader) ReadLog() {
 }
 
 // UDPStart udp server start
-func (r * UDPReader) Start() {
+func (r *UDPReader) Start() error {
 	r.logs = make(chan string, ServerConf.Reader.ReadChan)
 
 	udpAddr, err := net.ResolveUDPAddr(ServerConf.Reader.Network, ":"+strconv.Itoa(ServerConf.Reader.Port))
 	if err != nil {
 		log.Fatalf("解析监听地址失败----> %v", err)
+		return err
 	}
 	r.conn, err = net.ListenUDP("udp4", udpAddr)
 	if err != nil {
 		log.Fatalf("监听端口失败----->%v", err)
+		return err
 	}
 	if ServerConf.Reader.ReadBuffer == 0 {
-		r.conn.SetReadBuffer(1048576)
-	} else {
-		r.conn.SetReadBuffer(ServerConf.Reader.ReadBuffer)
+		ServerConf.Reader.ReadBuffer = 1048576
+	}
+
+	err = r.conn.SetReadBuffer(1048576)
+	if err != nil {
+		log.Println("set udp read buffer error", err)
 	}
 	if !strings.HasSuffix(ServerConf.LogDir, "/") {
 		ServerConf.LogDir += "/"
 	}
 
-	log.Infof(color.CyanString("开始监听%s", r.conn.LocalAddr()))
+	log.Printf("开始监听%s", r.conn.LocalAddr())
 
-	defer r.conn.Close()
+	defer func() {
+		err := r.conn.Close()
+		if err != nil {
+			log.Println("close conn error", err)
+		}
+	}()
 
 	go r.HandleLog()
 

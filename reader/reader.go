@@ -1,20 +1,18 @@
 package reader
 
 import (
-	"errors"
+	"log"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
 
-	"github.com/apex/log"
-	"github.com/fatih/color"
-	"github.com/fitzix/go-log/server/models"
+	"github.com/fitzix/go-log/models"
 )
 
 // ServerConf ss
-var ServerConf models.SerConf
+var ServerConf models.ServerConf
 
 // Reader reader
 type Reader struct {
@@ -26,7 +24,7 @@ type Reader struct {
 type XReader interface {
 	HandleLog()
 	WriteContent(content string)
-	Start()
+	Start() error
 }
 
 // 收取日志
@@ -34,7 +32,7 @@ func (reader *Reader) HandleLog() {
 	for {
 		rec := <-reader.logs
 		if !utf8.ValidString(rec) {
-			log.Errorf("编码错误: %v", rec)
+			log.Printf("编码错误: %v", rec)
 		} else {
 			reader.WriteContent(rec)
 		}
@@ -44,18 +42,20 @@ func (reader *Reader) HandleLog() {
 // WriteContent 向文件内写数据
 func (reader *Reader) WriteContent(content string) {
 	if reader.file == nil {
-		err := errors.New("")
+		// err := errors.New("")
+		var err error
 		reader.file, err = os.OpenFile(ServerConf.LogDir+strconv.Itoa(int(time.Now().Unix()))+".log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
 		if err != nil {
-			log.WithError(err).Error(color.RedString("创建日志文件失败"))
+			log.Println("创建日志文件失败", err)
 			return
 		}
 		go func() {
-			select {
-			case <-time.After(time.Duration(ServerConf.Reader.Interval) * time.Minute):
-				reader.file.Close()
-				reader.file = nil
+			<-time.After(time.Duration(ServerConf.Reader.Interval) * time.Minute)
+			err := reader.file.Close()
+			if err != nil {
+				log.Println("close channel file error", err)
 			}
+			reader.file = nil
 		}()
 	}
 
@@ -64,16 +64,15 @@ func (reader *Reader) WriteContent(content string) {
 	}
 
 	if !strings.HasSuffix(content, "\n") {
-		reader.file.WriteString(content + "\n")
-		return
+		content += "\n"
 	}
-
-	reader.file.WriteString(content)
+	_, err := reader.file.WriteString(content)
+	log.Println("write string error", err)
 }
 
-func Start() {
+func Start() error {
 	var readerImpl = getReader()
-	readerImpl.Start()
+	return readerImpl.Start()
 }
 
 func getReader() XReader {
