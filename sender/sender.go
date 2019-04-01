@@ -86,12 +86,12 @@ func (w *Worker) handleLog() {
 	for {
 		conn, err := w.pool.Get()
 		if err != nil {
-			log.Println("sender:88 获取连接池连接失败", err)
+			log.Println("sender 获取连接池连接失败", err)
 			continue
 		}
 		_, err = conn.(net.Conn).Write([]byte(<-w.msg))
 		if err != nil {
-			log.Println("sender:93 socker写入数据失败", err)
+			log.Println("sender socket写入数据失败", err)
 		}
 	}
 }
